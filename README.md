@@ -1,308 +1,292 @@
-```markdown
-# Master Developer Guide: From RSS Feed to Website and Automated Weekly Newsletter
+# T&C Decoder Tool
 
-*As the Chief Technical Officer, this project is designed to transform RSS feeds into a dynamic website and automate a weekly newsletter, using cost-effective tools suitable for a small team with a limited budget.*
+**Simplify and understand complex terms and conditions with ease.**
 
-## 📋 Table of Contents
+## Table of Contents
 
-1. [Introduction](#introduction)
-2. [Project Overview](#project-overview)
-3. [Prerequisites](#prerequisites)
-4. [Installation](#installation)
-5. [Usage](#usage)
-    - [Fetching and Parsing RSS Feeds](#fetching-and-parsing-rss-feeds)
-    - [Generating Markdown Files](#generating-markdown-files)
-    - [Automating Content Updates](#automating-content-updates)
-    - [Sending the Weekly Newsletter](#sending-the-weekly-newsletter)
-6. [Configuration](#configuration)
-7. [Automation and Scheduling](#automation-and-scheduling)
-8. [Deployment](#deployment)
-9. [Maintenance and Monitoring](#maintenance-and-monitoring)
-10. [Advanced Features](#advanced-features)
-11. [Contributing](#contributing)
-12. [License](#license)
-13. [Contact](#contact)
-14. [Acknowledgments](#acknowledgments)
+- [Introduction](#introduction)
+- [Features](#features)
+- [Demo](#demo)
+- [Technology Stack](#technology-stack)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Scripts](#scripts)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
 ---
 
 ## Introduction
 
-This project aims to create a system that:
-
-- Aggregates content from an RSS feed.
-- Publishes the content on a website using Obsidian Publish.
-- Automates a weekly newsletter sent via Sendinblue.
-
-All decisions are made to ensure cost-effectiveness and efficiency, making it ideal for a small team operating on a limited budget.
+The **T&C Decoder Tool** is a web application designed to help users easily understand the complex language often found in terms and conditions documents. By leveraging the power of AI through OpenAI's GPT models, the tool analyzes and summarizes lengthy legal texts into plain, understandable language.
 
 ---
 
-## Project Overview
+## Features
 
-We will:
+- **Upload Documents**: Users can upload terms and conditions documents in various formats (PDF, DOCX, TXT).
+- **AI-Powered Analysis**: Utilizes OpenAI's GPT models to generate simplified summaries.
+- **Interactive Summaries**: Provides collapsible cards and visualizations for easy navigation of key points.
+- **No Data Retention**: Ensures user privacy by not storing any uploaded documents or personal data.
+- **User Authentication**: Secure registration and login system using JWT.
+- **Responsive Design**: Accessible on desktops, tablets, and mobile devices.
+- **Accessibility Compliance**: Adheres to WCAG 2.1 guidelines for an inclusive user experience.
 
-- Use Python scripts to fetch and parse RSS feeds.
-- Generate markdown files from the parsed content and add them to an Obsidian vault.
-- Use Obsidian Publish to host the website.
-- Automate the sending of a weekly newsletter using Sendinblue's API.
-- Schedule scripts using cron jobs for automation.
+---
+
+## Demo
+
+*Note: If a live demo is available, provide the link here. If not, consider adding screenshots of the application interface.*
+
+---
+
+## Technology Stack
+
+### Frontend
+
+- **React.js**: JavaScript library for building user interfaces.
+- **Context API and Hooks**: State management within React.
+- **Axios**: Promise-based HTTP client for API calls.
+- **React Router**: Navigation within the application.
+- **CSS Modules**: Styling components.
+
+### Backend
+
+- **Node.js**: JavaScript runtime environment.
+- **Express.js**: Web application framework for Node.js.
+- **Sequelize**: Promise-based ORM for PostgreSQL.
+- **JWT (jsonwebtoken)**: Authentication via JSON Web Tokens.
+- **OpenAI API**: Integration with GPT models for AI processing.
+
+### Database
+
+- **PostgreSQL**: Relational database management system.
+
+### Others
+
+- **Nginx**: Web server and reverse proxy.
+- **PM2**: Process manager for Node.js applications.
+- **GitHub Actions**: CI/CD pipeline for automated testing and deployment.
+- **Let's Encrypt**: SSL/TLS certificates for secure connections.
 
 ---
 
 ## Prerequisites
 
-- **Programming Knowledge**: Basic understanding of Python and web development.
-- **Tools and Technologies**:
-    - Python 3.x
-    - Obsidian and Obsidian Publish
-    - Sendinblue account
-    - Git (optional, for version control)
-- **Python Libraries**:
-    - `feedparser`
-    - `requests`
-    - `jinja2`
-    - `sib-api-v3-sdk` (Sendinblue API SDK)
-- **Accounts**:
-    - Obsidian Publish account
-    - Sendinblue account with API key
+- **Node.js**: v14.x or higher
+- **npm**: v6.x or higher
+- **PostgreSQL**: v12.x or higher
+- **Git**: Version control system
+- **OpenAI API Key**: Obtain from [OpenAI](https://openai.com/)
 
 ---
 
 ## Installation
 
-1. **Clone the Repository**
-
-    ```bash
-    git clone https://github.com/yourusername/yourrepository.git
-    cd yourrepository
-    ```
-
-2. **Set Up a Virtual Environment (Optional but Recommended)**
-
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-    ```
-
-3. **Install the Required Python Libraries**
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-    *Ensure your `requirements.txt` includes:*
-
-    ```
-    feedparser
-    requests
-    jinja2
-    sib-api-v3-sdk
-    ```
-
-4. **Set Up Obsidian**
-
-    - Install Obsidian from [https://obsidian.md/](https://obsidian.md/).
-    - Create a new vault or use an existing one.
-
-5. **Configure Obsidian Publish**
-
-    - Subscribe to Obsidian Publish.
-    - In Obsidian, go to Settings > Obsidian Publish, and set up your site.
-
-6. **Set Up Sendinblue**
-
-    - Sign up at [Sendinblue](https://www.sendinblue.com/).
-    - Generate an API key in your account settings.
-
----
-
-## Usage
-
-### Fetching and Parsing RSS Feeds
-
-The script `fetch_articles.py` fetches articles from a specified RSS feed and parses them.
-
-**Edit `fetch_articles.py` to specify your RSS feed URL:**
-
-```python
-feed_url = "https://yourrssfeedurl.com/feed/"
-```
-
-**Run the script:**
+### 1. Clone the Repository
 
 ```bash
-python fetch_articles.py
+git clone https://github.com/yourusername/tc-decoder-tool.git
+cd tc-decoder-tool
 ```
 
-### Generating Markdown Files
+### 2. Install Dependencies
 
-The script will generate markdown files from the fetched articles and save them in a specified directory within your Obsidian vault.
-
-**Specify the output directory in `fetch_articles.py`:**
-
-```python
-output_dir = "/path/to/your/obsidian/vault/Articles"
-```
-
-### Automating Content Updates
-
-To automate the fetching and parsing process, schedule `fetch_articles.py` to run periodically.
-
-**Example using cron (runs daily at 6 AM):**
+#### Frontend
 
 ```bash
-0 6 * * * /usr/bin/python3 /path/to/fetch_articles.py
+cd frontend
+npm install
 ```
 
-### Sending the Weekly Newsletter
-
-The script `send_newsletter.py` compiles the top articles from the past week and sends them as a newsletter via Sendinblue.
-
-**Configure Sendinblue API Key and Sender Details in `send_newsletter.py`:**
-
-```python
-configuration.api_key['api-key'] = os.getenv('SENDINBLUE_API_KEY')
-
-send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
-    to=[{"email": "recipient@example.com"}],  # Replace with actual recipient or list management
-    sender={"name": "Your Name", "email": "your_email@example.com"},
-    subject="Weekly Tech News Digest",
-    html_content=content
-)
-```
-
-**Run the script:**
+#### Backend
 
 ```bash
-python send_newsletter.py
+cd ../backend
+npm install
+```
+
+### 3. Set Up the Database
+
+- Ensure PostgreSQL is installed and running.
+- Create a new database:
+
+```bash
+createdb tc_decoder_db
 ```
 
 ---
 
 ## Configuration
 
-1. **Environment Variables**
+### Backend Environment Variables
 
-    Store sensitive information like API keys in environment variables.
+Create a `.env` file in the `backend` directory with the following content:
 
-    **Example (.env file):**
+```env
+NODE_ENV=development
+PORT=3001
+DATABASE_URL=postgres://username:password@localhost:5432/tc_decoder_db
+JWT_SECRET=your_jwt_secret
+OPENAI_API_KEY=your_openai_api_key
+```
 
-    ```
-    SENDINBLUE_API_KEY=your_sendinblue_api_key
-    ```
+- Replace `username` and `password` with your PostgreSQL credentials.
+- Replace `your_jwt_secret` with a secure secret key.
+- Replace `your_openai_api_key` with your OpenAI API key.
 
-    Load them in your scripts using `os.getenv('VARIABLE_NAME')`.
+### Frontend Environment Variables
 
-2. **Email Recipients**
+Create a `.env` file in the `frontend` directory with the following content:
 
-    Update the `to` field in `send_newsletter.py` to specify your recipients.
-
-    **Note:** For managing multiple recipients, consider integrating with Sendinblue's contact lists.
-
-3. **Templates**
-
-    Customize the email template in `templates/newsletter.html` to match your branding.
-
----
-
-## Automation and Scheduling
-
-Use cron jobs to automate the execution of scripts.
-
-- **Fetch Articles Daily at 6 AM**
-
-    ```bash
-    0 6 * * * /usr/bin/python3 /path/to/fetch_articles.py
-    ```
-
-- **Send Newsletter Every Monday at 9 AM**
-
-    ```bash
-    0 9 * * MON /usr/bin/python3 /path/to/send_newsletter.py
-    ```
+```env
+REACT_APP_API_URL=http://localhost:3001/api
+```
 
 ---
 
-## Deployment
+## Usage
 
-- **Website Hosting**
+### 1. Run the Backend Server
 
-    - Use Obsidian Publish to host your website.
-    - After generating new markdown files, open Obsidian and publish the updates.
+Navigate to the `backend` directory and run:
 
-- **Automate Publishing (Optional)**
+```bash
+npm run dev
+```
 
-    - Currently, Obsidian Publish does not support automatic publishing via scripts.
-    - Consider setting reminders to publish updates after scripts run.
+- The backend server will start on `http://localhost:3001`.
 
----
+### 2. Run the Frontend Application
 
-## Maintenance and Monitoring
+Navigate to the `frontend` directory and run:
 
-- **Logging**
+```bash
+npm start
+```
 
-    - Implement logging in your scripts to monitor activity and errors.
-    - Example using Python's `logging` module.
+- The frontend application will open in your default browser at `http://localhost:3000`.
 
-- **Error Notifications**
+### 3. Access the Application
 
-    - Set up email alerts or notifications for script failures.
-
-- **Updating Dependencies**
-
-    - Regularly update your Python libraries to the latest versions.
-
-- **RSS Feed Monitoring**
-
-    - Periodically verify that your RSS feed source is active and has not changed its structure.
+- Register a new user or log in with your credentials.
+- Upload a terms and conditions document for analysis.
+- View the simplified summary and interact with the results.
 
 ---
 
-## Advanced Features
+## Project Structure
 
-- **Personalization**
+```
+tc-decoder-tool/
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── contexts/
+│   │   ├── hooks/
+│   │   ├── pages/
+│   │   ├── App.js
+│   │   └── index.js
+│   ├── .env
+│   ├── package.json
+│   └── ...
+├── backend/
+│   ├── controllers/
+│   ├── middlewares/
+│   ├── models/
+│   ├── routes/
+│   ├── services/
+│   ├── utils/
+│   ├── app.js
+│   ├── server.js
+│   ├── .env
+│   ├── package.json
+│   └── ...
+├── README.md
+└── LICENSE
+```
 
-    - Collect subscriber preferences to send personalized content.
+---
 
-- **Analytics**
+## Scripts
 
-    - Integrate Google Analytics with your Obsidian Publish site.
-    - Use Sendinblue's analytics tools to monitor email performance.
+### Frontend
 
-- **SEO Optimization**
+- **Start Development Server**: `npm start`
+- **Build for Production**: `npm run build`
+- **Run Tests**: `npm test`
+- **Lint Code**: `npm run lint`
 
-    - Optimize your website content for search engines by using proper meta tags and headings.
+### Backend
+
+- **Start Development Server**: `npm run dev`
+- **Run in Production**: `npm start`
+- **Run Tests**: `npm test`
+- **Run Migrations**: `npx sequelize-cli db:migrate`
+- **Seed Database**: `npx sequelize-cli db:seed:all`
+- **Lint Code**: `npm run lint`
 
 ---
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+We welcome contributions to the T&C Decoder Tool! Here's how you can help:
+
+1. **Fork the Repository**: Click the "Fork" button at the top right of this page.
+2. **Clone Your Fork**: Clone your forked repository to your local machine.
+
+   ```bash
+   git clone https://github.com/yourusername/tc-decoder-tool.git
+   ```
+
+3. **Create a Branch**: Create a new branch for your feature or bug fix.
+
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+4. **Make Your Changes**: Implement your feature or fix.
+5. **Commit Your Changes**: Commit your changes with a clear message.
+
+   ```bash
+   git commit -m "Add feature X"
+   ```
+
+6. **Push to Your Fork**:
+
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+7. **Create a Pull Request**: Go to the original repository and create a pull request.
+
+### Guidelines
+
+- Follow the existing code style and conventions.
+- Write clear commit messages.
+- Update documentation and comments where necessary.
+- Ensure your code passes all tests.
 
 ---
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
 ## Contact
 
-- **Project Maintainer**: [Your Name]
-- **Email**: your_email@example.com
-- **GitHub**: [https://github.com/yourusername](https://github.com/yourusername)
+If you have any questions, suggestions, or feedback, feel free to reach out.
+
+- **Email**: [contact@tcdecodertool.com](mailto:contact@tcdecodertool.com)
+- **Issue Tracker**: [GitHub Issues](https://github.com/yourusername/tc-decoder-tool/issues)
 
 ---
 
-## Acknowledgments
-
-- **Obsidian** for providing a powerful note-taking and publishing platform.
-- **Sendinblue** for offering accessible email marketing tools.
-- **Feedparser** and **Requests** libraries for simplifying RSS feed handling.
-
----
-
-*This README.md provides a comprehensive guide to setting up and running the project. For detailed explanations and code samples, refer to the scripts and templates provided in the repository.*
-```
+*Thank you for using the T&C Decoder Tool! Your support helps us make legal documents more accessible to everyone.*
